@@ -4,4 +4,8 @@ import { Column, Unique } from 'typeorm';
 export abstract class StateBasedAggregate {
   @Column({ type: 'int' })
   version: number = 0;
+
+  public isNew() {
+    return this.version === 0;
+  }
 }

@@ -1,0 +1,80 @@
+version: '3.9'
+services:
+  test:
+    build:
+      context: ../..
+      dockerfile: ./devops/test/TestDockerfile
+    depends_on:
+      app:
+        condition: service_healthy
+  app:
+    build:
+      context: ../..
+      dockerfile: ./devops/test/Dockerfile
+
+    depends_on:
+      postgres:
+          condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    environment:
+      SERVER_PORT: 8080
+      ENVIRONMENT: development
+      
+      DB_TYPE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_SYNCHRONIZE: 'true'
+      DB_PASSWORD: fskfnskfsdsodksq
+      DB_POOLSIZE: 100
+      DB_MIGRATION_TABLE_NAME: migrations_TypeORM
+      DB_NAME: food-ordering
+      JWT_SECRET_KEY: superawesomeserete2832vinv349h24bfy8fvb2b42
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: fnfnfnfdnfeddpipweww323
+      REDIS_USERNAME: ''
+      SUPER_ADMIN_EMAIL: owner@foodordering.com
+      VERIFICATION_DURATION_TIME_IN_SECONDS: 60
+      AUTH_JWT_SECRET_KEY: superawesomeserete2832vinv349h24bfy8fvb2b42
+      AUTH_JWT_DURATION_TIME_IN_SECONDS: 86400
+      TEST_SUCCESSFULL_PAYMENT_CARD: '4242424242424242,4000000000000259'
+      MAX_PAYMENT_RETRIES: 4
+      RETRY_DELAY_IN_MS: 100
+      ORDER_BATCH_INTERVAL_IN_MS: 5000
+      NOTIFICATION_TIME_IN_MS_BEFEORE_DELIVERY: 2500
+      ORDER_MAX_DELIVERY_BATCH: 5000
+      ORDER_EARNING_DISBURSEMENT_VENDOR_TO_ADMIN_SPLIT: 0.8
+
+  postgres:
+    image: 'postgis/postgis:15-3.3'
+    environment:
+      POSTGRES_PASSWORD: 'fskfnskfsdsodksq'
+      POSTGRES_DB: 'food-ordering'
+    volumes:
+      - foodorderingdev_postgres:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=2500'
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7.2.4-alpine3.19
+    volumes:  
+      - foodorderingdev_redis:/data
+    command: redis-server --save  20  1 --loglevel warning --requirepass fnfnfnfdnfeddpipweww323
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  foodorderingdev_postgres:
+    driver: local
+  foodorderingdev_redis:
+    driver: local

@@ -8,7 +8,9 @@ export abstract class Id {
   @IsUUID()
   private value: string | null;
 
-  public constructor() {}
+  public constructor(value: string | null = null) {
+    this.value = value;
+  }
 
   public toString(): string {
     if (this.value == null) {
@@ -18,7 +20,17 @@ export abstract class Id {
     return this.value;
   }
 
-  public static fromString<T extends Id>(ClassId: { new (): T }, value: string): T {
-    return assign(ClassId, { value } as any);
+  // public static fromString<T extends Id>(ClassId: { new (): T }, value: string): T {
+  //   return assign(ClassId, { value } as any);
+  // }
+
+  public static readonly  c: unique symbol = Symbol()
+
+  public equals(other: object): boolean {
+    return (
+      other instanceof Id &&
+      this.constructor === other.constructor &&
+      this.toString() === other.toString()
+    );
   }
 }

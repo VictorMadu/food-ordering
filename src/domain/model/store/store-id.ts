@@ -1,3 +1,6 @@
 import { Id } from '../../id';
 
-export class StoreId extends Id {}
+const c = Symbol()
+export class StoreId extends Id {
+    [c] = "c"
+}

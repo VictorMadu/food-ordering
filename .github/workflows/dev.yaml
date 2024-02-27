@@ -1,0 +1,13 @@
+name: Dev workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker-compose and Run test
+        run: make app-dev-run

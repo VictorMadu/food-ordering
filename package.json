@@ -26,15 +26,19 @@
     "@nestjs/swagger": "^7.3.0",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
+    "bull": "^4.12.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
+    "redis": "^4.6.13",
+    "redis-lru": "^0.6.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -46,6 +50,7 @@
     "@types/node": "^20.3.1",
     "@types/supertest": "^6.0.0",
     "@types/uuid": "^9.0.8",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.42.0",

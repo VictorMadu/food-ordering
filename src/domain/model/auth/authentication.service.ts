@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtToken } from './jwt-token.vo';
-import { SuperAdminId } from '../super-admin/super-admin-id';
-import { VendorId } from '../vendor/vendor-id';
+import { SuperAdminId } from '../user/super-admin-id';
+import { VendorId } from '../user/vendor-id';
 import * as jwt from 'jsonwebtoken';
 import { Setting } from 'src/setting';
 
@@ -28,7 +28,7 @@ export class AuthenticationService {
   public extractAdminId(jwtToken: string): SuperAdminId {
     const { data } = jwt.verify(jwtToken, Setting.auth.jwt.secretKey);
     if (data.userType === UserType.SUPER_ADMIN) {
-      return SuperAdminId.fromString(SuperAdminId, data.id);
+      return new SuperAdminId(data.id)
     } else {
       throw new Error();
     }
@@ -37,7 +37,7 @@ export class AuthenticationService {
   public extractVendorId(jwtToken: string): VendorId {
     const { data } = jwt.verify(jwtToken, Setting.auth.jwt.secretKey);
     if (data.userType === UserType.VENDOR) {
-      return VendorId.fromString(VendorId, data.id);
+      return new VendorId(data.id)
     } else {
       throw new Error();
     }

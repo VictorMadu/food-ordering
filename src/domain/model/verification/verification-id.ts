@@ -1,3 +1,7 @@
 import { Id } from '../../id';
 
-export class VerificationId extends Id {}
+const c = Symbol()
+
+export class VerificationId extends Id {
+    [c] = "c"
+}

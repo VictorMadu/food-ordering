@@ -9,12 +9,14 @@ import * as bcrypt from 'bcrypt';
 import { Env, Setting } from 'src/setting';
 import { Expose } from 'class-transformer';
 import { IsEmail, Length } from 'class-validator';
+import { Id } from 'src/domain/id';
+import { DomainException } from 'src/domain/exception/domain.exception';
 
 // TODO: Clean stale Verification and respective events
 // A verification is stale if timeOutAfter exceeded or there is duplicate (same email and verificationType) which was created earlier
 
 @Entity()
-export class Verification extends EventSourcedAggegrate<VerificationEvent> {
+export class Verification extends EventSourcedAggegrate<VerificationId, VerificationEvent> {
   @PrimaryColumn({
     type: 'uuid',
     transformer: idValueTransformer(VerificationId),
@@ -38,8 +40,8 @@ export class Verification extends EventSourcedAggegrate<VerificationEvent> {
   @Column({ type: 'timestamptz' })
   timeOutAfter: Date;
 
-  @Column()
-  verified: boolean;
+  @Column({ type: 'timestamptz', nullable: true })
+  completedAt: Date = null;
 
   public async initialize(email: string, verificationType: VerificationType): Promise<string> {
     const otp =
@@ -60,8 +62,12 @@ export class Verification extends EventSourcedAggegrate<VerificationEvent> {
     if (await bcrypt.compare(otp, this.hashedOtp)) {
       this.add(new VerificationCompleted(this.id, this.nextVersion()));
     } else {
-      throw new Error();
+      throw new DomainException('INVALID_OTP');
     }
+  }
+
+  public getId(): VerificationId {
+    return this.id;
   }
 
   public static expiryTimeFrom(time: Date): Date {
@@ -81,6 +87,10 @@ export abstract class VerificationEvent extends DomainEvent<Verification> {
   constructor(aggregateId: VerificationId, version: number) {
     super(version);
     this.aggregateId = aggregateId;
+  }
+
+  public getAggregateId() {
+    return this.aggregateId;
   }
 }
 
@@ -112,13 +122,11 @@ export class VerificationInitialized extends VerificationEvent {
     this.verificationType = verificationType;
   }
 
-  public applyTo(entity: Verification): void {
+  public _applyTo(entity: Verification): void {
     entity.hashedOtp = this.hashedOtp;
     entity.email = this.email;
     entity.verificationType = this.verificationType;
     entity.timeOutAfter = Verification.expiryTimeFrom(this.occurredAt);
-    entity.verified = false;
-    entity.version = this.version;
   }
 }
 
@@ -128,8 +136,7 @@ export class VerificationCompleted extends VerificationEvent {
     super(id, version);
   }
 
-  public applyTo(entity: Verification): void {
-    entity.verified = true;
-    entity.version = this.version;
+  public _applyTo(entity: Verification): void {
+    entity.completedAt = this.occurredAt;
   }
 }

@@ -16,7 +16,7 @@ const dataSource = new DataSource({
   useUTC: true,
   migrations: [],
   entities: ['dist/**/*.entity.js'],
-  subscribers: ['dist/**/*.subscriber.js', 'dist/**/*.controller.js'],
+  subscribers: ['dist/**/*.subscriber.js', 'dist/**/*.saga.js'],
 });
 
 dataSource.initialize();

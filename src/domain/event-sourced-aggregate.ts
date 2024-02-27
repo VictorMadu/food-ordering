@@ -1,14 +1,15 @@
 import { Column, Unique } from 'typeorm';
 import { DomainEvent } from './domain-event';
+import { Id } from './id';
 
 @Unique(['id', 'version'])
-export abstract class EventSourcedAggegrate<D extends DomainEvent<any>> {
+export abstract class EventSourcedAggegrate<I extends Id, D extends DomainEvent<any>> {
   private events: D[] = [];
 
   @Column({ type: 'int' })
   version: number = 0;
 
-  public add(d: D) {
+  protected add(d: D) {
     this.events.push(d);
     this.apply(d);
   }
@@ -27,4 +28,10 @@ export abstract class EventSourcedAggegrate<D extends DomainEvent<any>> {
   public nextVersion() {
     return this.version + 1;
   }
+
+  public isNew() {
+    return this.version === 0;
+  }
+
+  public abstract getId(): I;
 }
