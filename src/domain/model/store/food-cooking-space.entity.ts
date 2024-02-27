@@ -4,7 +4,7 @@ import { DomainEvent } from 'src/domain/domain-event';
 import { Id } from 'src/domain/id';
 import { idValueTransformer } from 'src/presistence/value-transformers/id.value-transformers';
 import { Entity, TableInheritance, Column, PrimaryColumn, Unique } from 'typeorm';
-import { StoreId } from '../store/store-id';
+import { StoreId } from './store-id';
 import { Expose } from 'class-transformer';
 import { IsInt, Length, Min } from 'class-validator';
 import { DomainException } from 'src/domain/exception/domain.exception';

@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { FoodCookingSpaceId } from '../food/food-cooking-space-id';
+import { FoodCookingSpaceId } from '../store/food-cooking-space-id';
 import { IsInt } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { OrderItemId } from './order-item-id';

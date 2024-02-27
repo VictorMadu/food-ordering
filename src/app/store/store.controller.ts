@@ -6,7 +6,7 @@ import { StoreRepository } from "src/presistence/repository/store.repository";
 import { VerifiedVendorGuard, AuthVendorId, VerifiedSuperAdminGuard } from "../auth.guard";
 import * as req from "../request.dto";
 import { Store } from "src/domain/model/store/store.entity";
-import { FoodCookingSpace } from "src/domain/model/food/food-cooking-space.entity";
+import { FoodCookingSpace } from "src/domain/model/store/food-cooking-space.entity";
 import { StoreId } from "src/domain/model/store/store-id";
 
 @ApiTags('Store')
@@ -19,11 +19,11 @@ export class StoreController {
       ) {}
 
       
-    @Post('set-up')
+    @Post()
   @UseGuards(VerifiedVendorGuard)
-  async setUp(@AuthVendorId() id: VendorId, @Body() body: req.Store) {
+  async createStore(@AuthVendorId() id: VendorId, @Body() body: req.Store) {
     const store = new Store();
-    store.setUp(id, body.name);
+    store.create(id, body.name);
 
     await this.storeRepository.save(store);
   }
@@ -72,7 +72,7 @@ export class StoreController {
 
   @Post('food-cooking-space/cook')
   @UseGuards(VerifiedVendorGuard)
-  async cookFood(@AuthVendorId() id: VendorId, @Body() body: req.CookFood) {
+  async cookPlatesOfFood(@AuthVendorId() id: VendorId, @Body() body: req.CookFood) {
     const store = await this.storeRepository.findOpenedByOwner(id).get();
 
     const foodCookingSpace = await this.foodCookingSpaceRepository

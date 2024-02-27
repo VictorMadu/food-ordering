@@ -1,8 +1,7 @@
-import { Column, Unique } from 'typeorm';
+import { Column } from 'typeorm';
 import { DomainEvent } from './domain-event';
 import { Id } from './id';
 
-@Unique(['id', 'version'])
 export abstract class EventSourcedAggegrate<I extends Id, D extends DomainEvent<any>> {
   private events: D[] = [];
 

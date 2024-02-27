@@ -1,8 +1,7 @@
-import { Column, Unique } from 'typeorm';
+import { VersionColumn } from 'typeorm';
 
-@Unique(['id', 'version'])
 export abstract class StateBasedAggregate {
-  @Column({ type: 'int' })
+  @VersionColumn({ type: 'int' })
   version: number = 0;
 
   public isNew() {

@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { IsInt, Length, Min } from 'class-validator';
-import { FoodCookingSpaceId } from 'src/domain/model/food/food-cooking-space-id';
+import { FoodCookingSpaceId } from 'src/domain/model/store/food-cooking-space-id';
 import { MailMessage } from 'src/domain/model/mail/mail-message.vo';
 import { Naira } from 'src/domain/model/naira';
 import { Customer } from 'src/domain/model/order/customer.vo';

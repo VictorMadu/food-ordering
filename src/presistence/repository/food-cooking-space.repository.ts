@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { OptionalAsync } from 'src/lib/optional';
 import { EntityManager, In, Repository } from 'typeorm';
 import { StoreId } from 'src/domain/model/store/store-id';
-import { FoodCookingSpace } from 'src/domain/model/food/food-cooking-space.entity';
-import { FoodCookingSpaceId } from 'src/domain/model/food/food-cooking-space-id';
+import { FoodCookingSpace } from 'src/domain/model/store/food-cooking-space.entity';
+import { FoodCookingSpaceId } from 'src/domain/model/store/food-cooking-space-id';
 import { VendorId } from 'src/domain/model/user/vendor-id';
 
 // TODO: Add Redis in each Repository

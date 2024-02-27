@@ -6,7 +6,6 @@ import { OperationStatus, Orchestrator, StoreState } from './operation-status';
 import { EventSourcedAggegrate } from 'src/domain/event-sourced-aggregate';
 import { Length } from 'class-validator';
 import { DomainEvent } from 'src/domain/domain-event';
-import { Id } from 'src/domain/id';
 import { Expose } from 'class-transformer';
 import { DomainException } from 'src/domain/exception/domain.exception';
 
@@ -32,12 +31,12 @@ export class Store extends EventSourcedAggegrate<StoreId, StoreEvent> {
   @Column(() => StoreState)
   state: StoreState;
 
-  public setUp(vendorId: VendorId, name: string) {
+  public create(vendorId: VendorId, name: string) {
     if (!this.isNew()) {
       throw new DomainException("ALREADY_SET_UP")
     }
 
-    this.add(new StoreSetup(this.id, this.nextVersion(), vendorId, name));
+    this.add(new StoreCreated(this.id, this.nextVersion(), vendorId, name));
   }
 
   public openForSales() {
@@ -96,7 +95,7 @@ export abstract class StoreEvent extends DomainEvent<Store> {
 }
 
 @ChildEntity()
-export class StoreSetup extends StoreEvent {
+export class StoreCreated extends StoreEvent {
   @Expose()
   readonly owner: VendorId;
 
