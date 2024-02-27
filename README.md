@@ -29,9 +29,9 @@ http://localhost:8089/docs
 - `devops.dev`: docker files for running app on development (non-production) mode.
 - `devops.local-dev`: docker files for local development.
 - `devops.test`: docker files for testing application.
-- `src.app`: This is where actions that causes in the application originates from. The actions can be triggered internally or externally (ie: users make requests). This folder contains controllers (for http routes, websocket), job scheduler (using queue), event handlers 
+- `src.app`: This is where operation in the application originates from. The operations can be triggered internally or externally (ie: users make requests). This folder contains controllers (for http routes, websocket), job scheduler (using queue), event handlers 
 - `src.domain`: This is where domain objects lives. Contains majority of the app business logic. Domain Objects includes: aggregates, domain events, value objects, domain services, entities.
-- `src.lib`: This is where ultity functions lives.
+- `src.lib`: This is where utility functions lives.
 - `src.presistence`: This is where repositories and cache for data storage lives.
 - `src.validator`: This is where value validators used by domain objects and dtos lives
 - `test.integration`: Integration test, app is set up to run similar way in production, and API calls are made, response are being asserted. Integration test focuses on user flow.
@@ -50,7 +50,9 @@ Aggregates extending this class:
 
 #### EventSourcedAggregate
 
-An abstract class extended by aggregates implementing the event sourcing pattern. It introduces time dimension into the data model and is commonly used with aggregates modeling complex business logic or when flexibility, scalability and preservation of past history is necessary (Less or no loss of information which can be important in data analysis or machine learning). Blends for CQRS, Event Sourcing and  managing eventually consistenct in Distributed Systems .
+This abstract class extended by aggregates that introduces time dimension into the data model and is commonly used with aggregates modeling complex business logic or when flexibility, scalability and preservation of past history is necessary (Less or no loss of information which can be important in data analysis or machine learning). Suitable for CQRS, Event Sourcing and  managing eventually consistenct in Distributed Systems.
+
+However, I added it to make real time update of super admin easier. I will make subscribers listen to the domain events and notify super admin through websocket.
 
 Aggregates extending this class: 
   - [`Vendor`](src/domain/model/user/vendor.entity.ts)
@@ -61,7 +63,7 @@ Aggregates extending this class:
 
 #### Concurrency Control
 
-I've applied the `optimistic concurrency control` (OCC) technique to manage concurrency and prevent persistence of stale data, utilizing the `version` field.
+I've applied the `optimistic concurrency control` (OCC) for transactional control, utilizing the `version` field. Simple, but powerful.
 
 
 ---
@@ -128,6 +130,14 @@ Before aggregates are saved, they are validated to ensure that there constraint 
 - Adding caching to all repositories' findById, findByEmail and findByVerified. Invalidate or update cache on save (aggregate updated or created)
 - More integration test to cover all usecases.
 - Security: Rate Limiting, stronger secret keys, more secure authentication to db and redis.
+
+
+### Note
+- A better queue implementation would have been used. But to keep things simple, I went to Bull which uses redis for its storage. The issue with Bull is that I dont think it supports distributed systems where we can have multiple systems providing and consuming task. A better solid queue would have been used; ie: Kafka, Rabbit MQ, queue implementations using SQL databases.
+
+I do prefer my own queue implementation to high level of flexibility to tweak things for performance or to suit usecase better.
+
+- For caching, using a simple storage in memory would be faster than using Redis/Memcache. However, when there is need to scale horizontally, it would not fly.
 
 
 <h1 style="text-align:center">END</h1>
