@@ -20,7 +20,7 @@ import { OrderRepository } from './repository/order.repository';
     VerificationRepository,
     FoodCookingSpaceRepository,
     OrderRepository,
-    StoreRepository
+    StoreRepository,
   ],
   exports: [
     SuperAdminRepository,

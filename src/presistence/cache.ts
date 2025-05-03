@@ -1,11 +1,10 @@
-import * as redis from "redis";
-import { Setting } from "src/setting";
-
+import * as redis from 'redis';
+import { Setting } from 'src/setting';
 
 const cache: any = redis.createClient({
   url: `redis://${Setting.redis.userName}:${Setting.redis.password}@${Setting.redis.host}:${Setting.redis.port}`,
 });
-cache.connect()
+cache.connect();
 
 cache.on('connect', () => {
   console.log('Connected to Redis server');
@@ -15,12 +14,11 @@ cache.on('error', (err: unknown) => {
   console.log('Error' + err);
 });
 
-export type Cache = ReturnType<typeof redis.createClient>
+export type Cache = ReturnType<typeof redis.createClient>;
 
 export default function getCache(): Cache {
   return cache;
 }
-
 
 // function Cache(timeout, lruStrategy) {
 //     return function (target, propertyKey, descriptor) {
@@ -38,4 +36,3 @@ export default function getCache(): Cache {
 //       return descriptor;
 //     };
 //   }
-  

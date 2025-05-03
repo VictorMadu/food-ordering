@@ -15,10 +15,8 @@ import { Setting } from 'src/setting';
 import { OrderEarnings } from './order-earnings.vo';
 import { StoreId } from '../store/store-id';
 
-
 @Entity()
 export class Order extends EventSourcedAggegrate<OrderId, OrderEvent> {
- 
   @Expose()
   @PrimaryColumn({
     type: 'uuid',
@@ -31,7 +29,7 @@ export class Order extends EventSourcedAggegrate<OrderId, OrderEvent> {
     type: 'uuid',
     transformer: idValueTransformer(StoreId),
   })
-  store: StoreId
+  store: StoreId;
 
   @Expose()
   @Length(1, 20, { each: true })
@@ -48,7 +46,7 @@ export class Order extends EventSourcedAggegrate<OrderId, OrderEvent> {
 
   @Expose()
   @Column(() => OrderEarnings)
-  earnings: OrderEarnings
+  earnings: OrderEarnings;
 
   @Expose()
   @Column(() => PaymentId)
@@ -67,9 +65,14 @@ export class Order extends EventSourcedAggegrate<OrderId, OrderEvent> {
       throw new DomainException('ORDER_ALREADY_CREATED');
     }
 
-    const earnings = OrderEarnings.calculate(totalBill, Setting.order.earningDisbursement.vendorToAdminSplit)
+    const earnings = OrderEarnings.calculate(
+      totalBill,
+      Setting.order.earningDisbursement.vendorToAdminSplit,
+    );
 
-    this.add(new OrderCreated(this.id, this.nextVersion(), customer, store, items, totalBill, earnings));
+    this.add(
+      new OrderCreated(this.id, this.nextVersion(), customer, store, items, totalBill, earnings),
+    );
   }
 
   payBill(paymentId: PaymentId) {
@@ -103,7 +106,7 @@ export class Order extends EventSourcedAggegrate<OrderId, OrderEvent> {
   }
 
   public getSuperAdminEarning(): Naira {
-    return this.earnings.superAdmin
+    return this.earnings.superAdmin;
   }
 
   public getVendorEarning(): Naira {
@@ -122,9 +125,9 @@ export class Order extends EventSourcedAggegrate<OrderId, OrderEvent> {
     return this.delivered;
   }
 
-  public  getStoreId(): StoreId {
+  public getStoreId(): StoreId {
     return this.store;
-}
+  }
 }
 
 @Entity()
@@ -173,7 +176,7 @@ export class OrderCreated extends OrderEvent {
     store: StoreId,
     items: OrderItem[],
     totalBill: Naira,
-    earnings: OrderEarnings
+    earnings: OrderEarnings,
   ) {
     super(id, version);
 

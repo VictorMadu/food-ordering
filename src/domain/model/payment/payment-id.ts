@@ -1,11 +1,11 @@
 import { Column } from 'typeorm';
 import * as uuid from 'uuid';
 
-const c = Symbol()
+const c = Symbol();
 
 export class PaymentId {
-  [c] = "c"
-  
+  [c] = 'c';
+
   @Column({ type: 'varchar', length: 511, nullable: true })
   readonly value: string;
 

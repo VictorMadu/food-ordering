@@ -28,7 +28,7 @@ export class AuthenticationService {
   public extractAdminId(jwtToken: string): SuperAdminId {
     const { data } = jwt.verify(jwtToken, Setting.auth.jwt.secretKey);
     if (data.userType === UserType.SUPER_ADMIN) {
-      return new SuperAdminId(data.id)
+      return new SuperAdminId(data.id);
     } else {
       throw new Error();
     }
@@ -37,7 +37,7 @@ export class AuthenticationService {
   public extractVendorId(jwtToken: string): VendorId {
     const { data } = jwt.verify(jwtToken, Setting.auth.jwt.secretKey);
     if (data.userType === UserType.VENDOR) {
-      return new VendorId(data.id)
+      return new VendorId(data.id);
     } else {
       throw new Error();
     }

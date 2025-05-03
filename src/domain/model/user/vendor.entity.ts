@@ -49,7 +49,7 @@ export class Vendor extends EventSourcedAggegrate<VendorId, VendorEvent> {
   }
 
   public credit(amount: Naira) {
-    this.add(new VendorCredited(this.id, this.nextVersion(), amount))
+    this.add(new VendorCredited(this.id, this.nextVersion(), amount));
   }
 
   public getId(): VendorId {
@@ -129,6 +129,6 @@ export class VendorCredited extends VendorEvent {
 
   protected _applyTo(entity: Vendor): void {
     entity.verified = true;
-    entity.earningBalance = entity.earningBalance.add(this.amount)
+    entity.earningBalance = entity.earningBalance.add(this.amount);
   }
 }

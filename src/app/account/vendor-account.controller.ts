@@ -40,7 +40,7 @@ export class VendorAccountController {
     }
   }
 
-  @Post("verification/verify")
+  @Post('verification/verify')
   async verifyAccount(@Body() body: req.AccountVerification): Promise<JwtToken> {
     const verification = await this.verificationRepository
       .findLatestByEmailAndVerificationTypeOrFail(body.email, VerificationType.VENDOR)
@@ -65,6 +65,4 @@ export class VendorAccountController {
       throw new DomainException('WRONG_LOGIN');
     }
   }
-
-
 }

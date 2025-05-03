@@ -11,7 +11,6 @@ import { Naira } from '../naira';
 @Entity()
 @Unique(['email', 'verified'])
 export class SuperAdmin extends StateBasedAggregate {
- 
   @PrimaryColumn({
     type: 'uuid',
     transformer: idValueTransformer(SuperAdminId),
@@ -51,8 +50,8 @@ export class SuperAdmin extends StateBasedAggregate {
   }
 
   credit(amount: Naira) {
-    this.earningBalance = this.earningBalance.add(amount)
-}
+    this.earningBalance = this.earningBalance.add(amount);
+  }
 
   isVerified(): boolean {
     return this.verified;

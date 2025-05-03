@@ -33,7 +33,7 @@ export class Store extends EventSourcedAggegrate<StoreId, StoreEvent> {
 
   public create(vendorId: VendorId, name: string) {
     if (!this.isNew()) {
-      throw new DomainException("ALREADY_SET_UP")
+      throw new DomainException('ALREADY_SET_UP');
     }
 
     this.add(new StoreCreated(this.id, this.nextVersion(), vendorId, name));
@@ -42,9 +42,9 @@ export class Store extends EventSourcedAggegrate<StoreId, StoreEvent> {
   public openForSales() {
     if (this.state.isOpened() || this.state.isClosedBySuperAdmin()) {
       throw new DomainException('SHOP_CANT_BE_OPENED');
-    } 
+    }
 
-      this.add(new OpenedForSale(this.id, this.nextVersion()));
+    this.add(new OpenedForSale(this.id, this.nextVersion()));
   }
 
   public closeAfterSales() {
@@ -59,14 +59,14 @@ export class Store extends EventSourcedAggegrate<StoreId, StoreEvent> {
     if (!this.state.isClosedBySuperAdmin()) {
       throw new DomainException('SHOP_CANT_BE_OPENED');
     }
-    this.add(new OpenedAfterInspection(this.id, this.nextVersion()))
+    this.add(new OpenedAfterInspection(this.id, this.nextVersion()));
   }
 
   public closeAfterInspection() {
     if (this.state.isClosedBySuperAdmin()) {
       throw new DomainException('SHOP_CANT_BE_CLOSED');
     }
-    this.add(new ClosedAfterInspection(this.id, this.nextVersion()))
+    this.add(new ClosedAfterInspection(this.id, this.nextVersion()));
   }
 
   public getId(): StoreId {
@@ -91,7 +91,6 @@ export abstract class StoreEvent extends DomainEvent<Store> {
   public getAggregateId() {
     return this.aggregateId;
   }
-
 }
 
 @ChildEntity()

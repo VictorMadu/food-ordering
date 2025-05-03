@@ -9,6 +9,7 @@ import {
   EventSubscriber,
   InsertEvent,
   LoadEvent,
+  OptimisticLockVersionMismatchError,
   UpdateEvent,
 } from 'typeorm';
 
@@ -51,28 +52,26 @@ export class EntitySubscriber implements EntitySubscriberInterface {
   }
 }
 
-
 async function afterSave(event: InsertEvent<any> | UpdateEvent<any>): Promise<void> {
   if (event.entity instanceof EventSourcedAggegrate) {
     await event.manager.save(event.entity.pushOutPendingEvents());
   } else if (event.entity instanceof StateBasedAggregate) {
     const expectedVersion = Reflect.getOwnMetadata(EXPECTED_VERSION_METADATA, event.entity);
-      Reflect.deleteMetadata(EXPECTED_VERSION_METADATA, event.entity);
+    const actualVersion = Reflect.get(event.entity, event.metadata.versionColumn.propertyName);
+    Reflect.deleteMetadata(EXPECTED_VERSION_METADATA, event.entity);
 
-      const actualVersion = Reflect.get(event.entity, event.metadata.versionColumn.propertyName);
+    if (expectedVersion !== actualVersion) {
+      throw new OptimisticLockVersionMismatchError(event.entity.toString(), expectedVersion, actualVersion)
+    }
+
   }
 }
 
 async function beforeSave(event: InsertEvent<any> | UpdateEvent<any>) {
   if (event.entity instanceof StateBasedAggregate) {
     await validateAsync(event.entity);
-    event.entity.version++;
   } else if (event.entity instanceof EventSourcedAggegrate) {
     await validateAsync(event.entity);
-    const currentVersion = Reflect.get(event.entity, event.metadata.versionColumn.propertyName);
-    const expectedVersionAfterUpdate = currentVersion + 1;
-
-    Reflect.defineMetadata(EXPECTED_VERSION_METADATA, expectedVersionAfterUpdate, event.entity);
   } else if (event.entity instanceof DomainEvent) {
     const copy: any = Object.assign({}, event.entity);
     delete copy.id;
@@ -87,6 +86,5 @@ async function beforeSave(event: InsertEvent<any> | UpdateEvent<any>) {
     }) as any;
   }
 }
-
 
 const EXPECTED_VERSION_METADATA = Symbol();

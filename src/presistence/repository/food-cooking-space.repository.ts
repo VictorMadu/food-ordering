@@ -49,9 +49,15 @@ export class FoodCookingSpaceRepository {
     );
   }
 
-  public async findDistinctStore(ids: FoodCookingSpaceId[], max: number) : Promise<StoreId[]>{
-    const results = await this.r.createQueryBuilder("f").select(["f.storeId"]).whereInIds(ids.map(i => i.toString())).distinctOn(["storeId"]).limit(max).getRawMany<string>()
+  public async findDistinctStore(ids: FoodCookingSpaceId[], max: number): Promise<StoreId[]> {
+    const results = await this.r
+      .createQueryBuilder('f')
+      .select(['f.storeId'])
+      .whereInIds(ids.map((i) => i.toString()))
+      .distinctOn(['storeId'])
+      .limit(max)
+      .getRawMany<string>();
 
-    return results.map(r => new StoreId(r))
+    return results.map((r) => new StoreId(r));
   }
 }

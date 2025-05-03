@@ -1,25 +1,23 @@
-import { Body, Controller, Param, Post, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { VendorId } from "src/domain/model/user/vendor-id";
-import { FoodCookingSpaceRepository } from "src/presistence/repository/food-cooking-space.repository";
-import { StoreRepository } from "src/presistence/repository/store.repository";
-import { VerifiedVendorGuard, AuthVendorId, VerifiedSuperAdminGuard } from "../auth.guard";
-import * as req from "../request.dto";
-import { Store } from "src/domain/model/store/store.entity";
-import { FoodCookingSpace } from "src/domain/model/store/food-cooking-space.entity";
-import { StoreId } from "src/domain/model/store/store-id";
+import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { VendorId } from 'src/domain/model/user/vendor-id';
+import { FoodCookingSpaceRepository } from 'src/presistence/repository/food-cooking-space.repository';
+import { StoreRepository } from 'src/presistence/repository/store.repository';
+import { VerifiedVendorGuard, AuthVendorId, VerifiedSuperAdminGuard } from '../auth.guard';
+import * as req from '../request.dto';
+import { Store } from 'src/domain/model/store/store.entity';
+import { FoodCookingSpace } from 'src/domain/model/store/food-cooking-space.entity';
+import { StoreId } from 'src/domain/model/store/store-id';
 
 @ApiTags('Store')
 @Controller('api/store')
 export class StoreController {
+  constructor(
+    private storeRepository: StoreRepository,
+    private foodCookingSpaceRepository: FoodCookingSpaceRepository,
+  ) {}
 
-    constructor(
-        private storeRepository: StoreRepository,
-        private foodCookingSpaceRepository: FoodCookingSpaceRepository,
-      ) {}
-
-      
-    @Post()
+  @Post()
   @UseGuards(VerifiedVendorGuard)
   async createStore(@AuthVendorId() id: VendorId, @Body() body: req.Store) {
     const store = new Store();
@@ -46,7 +44,7 @@ export class StoreController {
 
   @Post(':storeId/inspection/open')
   @UseGuards(VerifiedSuperAdminGuard)
-  async open( @Param("storeId") storeId: string): Promise<void> {
+  async open(@Param('storeId') storeId: string): Promise<void> {
     const store = await this.storeRepository.findById(new StoreId(storeId)).get();
     store.openAfterInspection();
     await this.storeRepository.save(store);
@@ -54,7 +52,7 @@ export class StoreController {
 
   @Post(':storeId/inspection/close')
   @UseGuards(VerifiedSuperAdminGuard)
-  async closeShop( @Param("storeId") storeId: string): Promise<void> {
+  async closeShop(@Param('storeId') storeId: string): Promise<void> {
     const store = await this.storeRepository.findById(new StoreId(storeId)).get();
     store.closeAfterInspection();
     await this.storeRepository.save(store);
@@ -82,5 +80,4 @@ export class StoreController {
     foodCookingSpace.cookFood(body.noOfPlates);
     await this.foodCookingSpaceRepository.save(foodCookingSpace);
   }
-
 }

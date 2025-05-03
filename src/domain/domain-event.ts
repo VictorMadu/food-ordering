@@ -37,6 +37,6 @@ export abstract class DomainEvent<A extends EventSourcedAggegrate<Id, any>> {
   }
 
   protected abstract _applyTo(entity: A): void;
-  
+
   public abstract getAggregateId(): Id;
 }

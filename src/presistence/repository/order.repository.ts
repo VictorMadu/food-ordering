@@ -10,7 +10,6 @@ import { VendorId } from 'src/domain/model/user/vendor-id';
 // TODO: Add Redis in each Repository
 @Injectable()
 export class OrderRepository {
- 
   private readonly r: Repository<Order>;
 
   constructor(manager: EntityManager) {
@@ -56,5 +55,4 @@ export class OrderRepository {
       take: pagination.getLimit(),
     });
   }
-
 }

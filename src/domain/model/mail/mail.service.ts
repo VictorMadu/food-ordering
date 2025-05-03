@@ -9,27 +9,27 @@ export class MailService {
   // Simulate sending batch emails
   async sendBatchMail(mails: Mail[]) {
     for (let i = 0; i < mails.length; i++) {
-        await this.sendMail(mails[i])
+      await this.sendMail(mails[i]);
     }
   }
 
   async sendMail(mail: Mail) {
-      await validateAsync(mail);
+    await validateAsync(mail);
 
     await sleep(Math.random() * 1500 + 1500); // Simulate delays during api calls
     console.log(
-        'From: ' +
-          Setting.superAdmin.email +
-          '\n' +
-          'To: ' +
-          mail.email +
-          '\n' +
-          'Title: ' +
-          mail.getTitle() +
-          '\n' +
-          'Body: ' +
-          mail.getBody() +
-          '\n\n',
-      );
+      'From: ' +
+        Setting.superAdmin.email +
+        '\n' +
+        'To: ' +
+        mail.email +
+        '\n' +
+        'Title: ' +
+        mail.getTitle() +
+        '\n' +
+        'Body: ' +
+        mail.getBody() +
+        '\n\n',
+    );
   }
 }

@@ -15,7 +15,7 @@ export class OrderingController {
     private orderBillCalculatorService: OrderBillCalculatorService,
     private orderRepository: OrderRepository,
     private paymentService: PaymentService,
-    private foodCookingSpaceRepository: FoodCookingSpaceRepository
+    private foodCookingSpaceRepository: FoodCookingSpaceRepository,
   ) {}
 
   @Post('ordering/init')
@@ -23,13 +23,16 @@ export class OrderingController {
     const order = new Order();
     const foods = body.getFoods();
     const totalBill = await this.orderBillCalculatorService.calculateTotal(foods);
-    const distinctStores = await this.foodCookingSpaceRepository.findDistinctStore(foods.map(f => f.getFoodId()), 2);
+    const distinctStores = await this.foodCookingSpaceRepository.findDistinctStore(
+      foods.map((f) => f.getFoodId()),
+      2,
+    );
 
     if (distinctStores.length !== 1) {
-        throw new DomainException("ORDER_CAN_ONLY_BE_FROM_ONE_SHOP")
+      throw new DomainException('ORDER_CAN_ONLY_BE_FROM_ONE_SHOP');
     }
 
-    order.create(body.getCustomer(),distinctStores[0], foods, totalBill);
+    order.create(body.getCustomer(), distinctStores[0], foods, totalBill);
     await this.orderRepository.save(order);
 
     return order;
@@ -51,5 +54,4 @@ export class OrderingController {
 
     return order;
   }
-
 }

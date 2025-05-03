@@ -11,7 +11,7 @@ import { OrderDeliveryController } from './order/delivery.controller';
 import { OrderingController } from './order/ordering.controller';
 import { StoreController } from './store/store.controller';
 import { HealthCheckController } from './info/info.controller';
-
+import { WebSocketService } from './web-socket.service';
 
 @Module({
   imports: [PresistenceModule, DomainModule],
@@ -21,9 +21,10 @@ import { HealthCheckController } from './info/info.controller';
     OrderingController,
     OrderDeliveryController,
     StoreController,
-    HealthCheckController
+    HealthCheckController,
   ],
   providers: [
+    WebSocketService,
     DeliveryCustomerNotificationProcessor,
     {
       provide: APP_INTERCEPTOR,

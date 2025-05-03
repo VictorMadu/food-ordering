@@ -24,7 +24,7 @@ export abstract class Id {
   //   return assign(ClassId, { value } as any);
   // }
 
-  public static readonly  c: unique symbol = Symbol()
+  public static readonly c: unique symbol = Symbol();
 
   public equals(other: object): boolean {
     return (

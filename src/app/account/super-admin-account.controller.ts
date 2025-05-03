@@ -1,4 +1,4 @@
-import { Body, Controller, Post,UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SuperAdmin } from 'src/domain/model/user/super-admin.entity';
 import { SuperAdminRepository } from 'src/presistence/repository/super-admin.repository';
@@ -29,7 +29,9 @@ export class SuperAdminAccountController {
 
   @Post('verification/initialize')
   async initializeForSuperAdmin(@Body() body: req.VerificationInitialization): Promise<void> {
-    const existsAndUnVerified = await this.superAdminRepository.existsAndUnVerifiedByEmail(body.email);
+    const existsAndUnVerified = await this.superAdminRepository.existsAndUnVerifiedByEmail(
+      body.email,
+    );
 
     if (existsAndUnVerified) {
       const verification = new Verification();
@@ -40,7 +42,7 @@ export class SuperAdminAccountController {
     }
   }
 
-  @Post("verification/verify")
+  @Post('verification/verify')
   async verifyAccount(@Body() body: req.AccountVerification): Promise<JwtToken> {
     const verification = await this.verificationRepository
       .findLatestByEmailAndVerificationTypeOrFail(body.email, VerificationType.ADMIN)

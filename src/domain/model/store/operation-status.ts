@@ -36,7 +36,6 @@ export class StoreState {
     return this.isClosed() && this.orchestrator === Orchestrator.SUPER_ADMIN;
   }
 
-
   isOpened(): boolean {
     return this.operationStatus === OperationStatus.OPEN;
   }

@@ -1,7 +1,7 @@
 import { Id } from '../../id';
 
-const c = Symbol()
+const c = Symbol();
 
 export class VerificationId extends Id {
-    [c] = "c"
+  [c] = 'c';
 }

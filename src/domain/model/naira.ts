@@ -3,7 +3,6 @@ import { validateDefined } from 'src/lib/validate';
 import { Column } from 'typeorm';
 
 export class Naira {
- 
   @Column({ type: 'int', nullable: true })
   @IsInt()
   @Min(0)
@@ -13,7 +12,6 @@ export class Naira {
     this.value = value;
     validateDefined(this);
   }
-
 
   multiply(multipler: number): Naira {
     return new Naira(Math.floor(this.value * multipler));

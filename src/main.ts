@@ -1,7 +1,8 @@
-import { NestFactory } from '@nestjs/core';
 import { Setting } from './setting';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
+import { AbstractWebSocketHandler } from './lib/websocket/abstract-web-socket-handler';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -11,6 +12,8 @@ async function bootstrap() {
         ? ['error', 'warn', 'debug', 'verbose', 'log']
         : ['error', 'warn'],
   });
+
+  AbstractWebSocketHandler.init(app.getHttpServer());
 
   if (Setting.env !== 'production') {
     const options = new DocumentBuilder()

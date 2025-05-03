@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { VerificationType } from "src/domain/model/verification/verification-type";
-import { VerificationCompleted } from "src/domain/model/verification/verification.entity";
-import { DomainEventListener } from "src/presistence/domain-event-listener";
-import { SuperAdminRepository } from "src/presistence/repository/super-admin.repository";
-import { VendorRepository } from "src/presistence/repository/vendor.repository";
-import { VerificationRepository } from "src/presistence/repository/verification.repository";
-import { EventSubscriber, EntityManager } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { VerificationType } from 'src/domain/model/verification/verification-type';
+import { VerificationCompleted } from 'src/domain/model/verification/verification.entity';
+import { DomainEventListener } from 'src/presistence/domain-event-listener';
+import { SuperAdminRepository } from 'src/presistence/repository/super-admin.repository';
+import { VendorRepository } from 'src/presistence/repository/vendor.repository';
+import { VerificationRepository } from 'src/presistence/repository/verification.repository';
+import { EventSubscriber, EntityManager } from 'typeorm';
 
 @EventSubscriber()
 @Injectable()
